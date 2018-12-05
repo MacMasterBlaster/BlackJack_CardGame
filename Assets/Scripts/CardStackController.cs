@@ -52,11 +52,9 @@ public class CardStackController : MonoBehaviour
         for (int i = 0; i < numAces; i++) {
             if (totalValue + 11 <= 21) {
                 totalValue += 11;
-                Debug.Log(gameObject.name +": ace = 11");
             }
             else {
                 totalValue += 1;
-                Debug.Log(gameObject.name +": ace = 1");
             }
         }
         Debug.Log(gameObject.name +": Hand Total Value: " + totalValue);

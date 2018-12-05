@@ -33,6 +33,10 @@ public class Game_Manager : MonoBehaviour {
 	private CardStackController dealer;
 	private CardStackController deck;
 
+    private int dealerWins;
+    private int playerWins;
+    private int houseWins;
+
 	// Deals the initial hands of cards to the dealer and the player and creates the deck.
 	public void StartNewGame() {
         // If cardStack instances already exist, destroy them.
@@ -62,6 +66,8 @@ public class Game_Manager : MonoBehaviour {
         playerValueText.text = "";
         dealerValueText.text = "";
         gameOverText.text = "";
+
+        PullStats();
 	}
 
 	public void HitMe() {
@@ -97,16 +103,20 @@ public class Game_Manager : MonoBehaviour {
     }
 
     void GameOver() {
-        if ((!dealerBusts && dealer.HandValue() >= player.HandValue()) || (player.HandValue() == dealer.HandValue()) || (playerBusts && !dealerBusts))  {
+        if (dealerBusts && playerBusts) {
+            gameOverText.text = "House Wins!"; // Should only appear if both the player and the dealer bust.
+            houseWins++;
+        }
+        else if ((!dealerBusts && dealer.HandValue() >= player.HandValue()) || (player.HandValue() == dealer.HandValue()) || (playerBusts && !dealerBusts))  {
             gameOverText.text = "Dealer Wins!";
+            dealerWins++;
         }
         else if ((dealerBusts && !playerBusts) || (player.HandValue() > dealer.HandValue()) || (player.HandValue() <= 21 && player.HandValue() > dealer.HandValue())) {
             gameOverText.text = "Player Wins!";
-        }
-        else {
-            gameOverText.text = "House Wins!"; // Should only appear if both the player and the dealer bust.
+            playerWins++;
         }
         UpdateUI();
+        UpdateStatsFile();
     }
 
     void UpdateUI() {
@@ -142,9 +152,30 @@ public class Game_Manager : MonoBehaviour {
             yield return new WaitForSeconds(1f);
         }
 
-        // Once the dealer's card stack is is 17 or greater the dealer's first card is set to be visible so the player can see the dealer's hand.
+        // Once the dealer's card stack is is 17 or greater the dealer's first card is set to be visible so 
+        //the player can see the dealer's hand.
         CardStackViewer cardStackViewer = dealer.GetComponent<CardStackViewer>();
         cardStackViewer.Toggle(dealersFirstCard, true);
         GameOver();
     }
+
+    public void PullStats() {
+        dealerWins = PlayerPrefs.GetInt("DealerWins");
+        playerWins = PlayerPrefs.GetInt("PlayerWins");
+        houseWins = PlayerPrefs.GetInt("HouseWins");
+        //Debug.Log(string.Format("pulled stats: Dealer {0}, Player {1}, House {2}", dealerWins, playerWins, houseWins));
+    }
+
+    public void UpdateStatsFile() {
+        PlayerPrefs.SetInt("DealerWins", dealerWins);
+        PlayerPrefs.SetInt("PlayerWins", playerWins);
+        PlayerPrefs.SetInt("HouseWins", houseWins);
+        //Debug.Log(string.Format("Updated stats: Dealer {0}, Player {1}, House {2}", dealerWins, playerWins, houseWins));
+    }
+    
+    public void ViewStats() {
+        PullStats();
+        gameOverText.text = string.Format("Dealer Wins: {0}  Player Wins: {1}  House Wins: {2}", dealerWins, playerWins, houseWins);
+    }
+
 }
