@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class CardStackController : MonoBehaviour
 {
-    public event CardRemovedEventHandler CardRemoved;
-    
-    public bool isDealerDeck;
+    public event CardEventHandler CardRemoved;
+    public event CardEventHandler CardAdded;
 
+    public bool isDealerDeck;
+    
     public bool HasCards {
         get { return cardStack != null && cardStack.Count > 0; }
     }
@@ -29,17 +30,18 @@ public class CardStackController : MonoBehaviour
     public int HandValue(){
         int totalValue = 0;
         int numAces = 0;
-        
+
         foreach (int cardIndex in GetCards()){
             int rank = cardIndex % 13;
-
             if (rank < 8) {
-                totalValue = rank + 2; //These are the numbers cards in the suite. The raw rank value is offset by two, to compensate just add two.
-                totalValue += rank;
+                rank += 2; //These are the numbers cards in the suite. The raw rank value is offset by two, to compensate just add two.
+                totalValue = totalValue + rank;
+                Debug.Log(gameObject.name +": cardIndex " + cardIndex + " = " + rank);
             } 
-            else if (rank > 8 && rank < 12){
-                totalValue = 10; //These are the face cards.
-                totalValue += rank;
+            else if (rank > 7 && rank < 12){
+                rank = 10; //These are the face cards and 10.
+                totalValue = totalValue + rank;
+                Debug.Log(gameObject.name +": cardIndex " + cardIndex + " = " + rank);
             }
             else {
                 numAces++; //Otherwise its an ace.
@@ -49,16 +51,19 @@ public class CardStackController : MonoBehaviour
         // This process is repeated with each ace in the card stack.
         for (int i = 0; i < numAces; i++) {
             if (totalValue + 11 <= 21) {
-                totalValue = totalValue + 11;
+                totalValue += 11;
+                Debug.Log(gameObject.name +": ace = 11");
             }
             else {
-                totalValue = totalValue + 1;
+                totalValue += 1;
+                Debug.Log(gameObject.name +": ace = 1");
             }
         }
+        Debug.Log(gameObject.name +": Hand Total Value: " + totalValue);
         return totalValue;
     }
     
-    // publicly accessable read only method for cards list so as to maintain the integrety of our source list.
+    // publicly accessable read only method for cards list so as to maintain the integrety of the cardStack's source list.
     public IEnumerable<int> GetCards() {
         foreach (int card in cardStack) {
             yield return card;
@@ -68,7 +73,7 @@ public class CardStackController : MonoBehaviour
     //The base list for the deck of cards
     private List<int> cardStack;
 
-    void Start () {
+    void Awake () {
         cardStack = new List<int>();
         if (isDealerDeck) {
             CreateDeck();
@@ -80,7 +85,7 @@ public class CardStackController : MonoBehaviour
         int temp = cardStack[0];
         cardStack.RemoveAt(0);
         if (CardRemoved != null){
-            CardRemoved (this, new CardRemovedEventArgs(temp));
+            CardRemoved (this, new CardEventArgs(temp));
         }
         return temp;
     }
@@ -88,6 +93,9 @@ public class CardStackController : MonoBehaviour
     //Add a card to the end of the card stack list.
     public void AddCard(int card) {
         cardStack.Add(card);
+        if (CardAdded != null) {
+            CardAdded(this, new CardEventArgs(card));
+        }
     }
    
     public void CreateDeck() {
@@ -114,5 +122,9 @@ public class CardStackController : MonoBehaviour
 			cardStack[k] = cardStack[n];
 			cardStack[n] = temp;
 		}
+    }
+
+    public void DeleteInstance(){
+        Destroy(gameObject);
     }
 }

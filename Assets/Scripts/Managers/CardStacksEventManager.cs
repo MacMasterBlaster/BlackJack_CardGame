@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public delegate void CardRemovedEventHandler(object source, CardRemovedEventArgs e);
+public delegate void CardEventHandler(object source, CardEventArgs e);
 
-public class CardRemovedEventArgs {
+public class CardEventArgs {
 	
 	public int CardIndex {get; private set;}
 	
-	public CardRemovedEventArgs(int cardIndex) {
+	public CardEventArgs(int cardIndex) {
 		CardIndex = cardIndex;
 	}
 }

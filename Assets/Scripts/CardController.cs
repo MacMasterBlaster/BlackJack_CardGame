@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class CardController : MonoBehaviour
 {
-
-    /* This script controls the functionality of the individual cards.
-    It also stores the all values necessary to determine face values. */
-
+    // This script controls the functionality of the individual cards.
+    
     public SpriteRenderer spriteRenderer;
     public Sprite[] faces;
     public Sprite cardBack;
     public int cardIndex;
-
+   
     void Awake() {
         if (spriteRenderer == null) {
             spriteRenderer = GetComponent<SpriteRenderer>();

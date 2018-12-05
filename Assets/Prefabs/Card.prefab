@@ -108,7 +108,6 @@ MonoBehaviour:
   - {fileID: 21300078, guid: 9f0efc8160dcacb4f9a6e2f391381e34, type: 3}
   cardBack: {fileID: 21300108, guid: 9f0efc8160dcacb4f9a6e2f391381e34, type: 3}
   cardIndex: 0
-  faceValue: 0
 --- !u!212 &212532669657451800
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -141,8 +140,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1302617555
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300108, guid: 9f0efc8160dcacb4f9a6e2f391381e34, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
