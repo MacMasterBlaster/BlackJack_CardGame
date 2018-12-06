@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CardController : MonoBehaviour
 {
-    // This script controls the functionality of the individual cards.
+    // This script controls the functionality of the individual cards as well as storing the face value of the card.
     
     public SpriteRenderer spriteRenderer;
     public Sprite[] faces;

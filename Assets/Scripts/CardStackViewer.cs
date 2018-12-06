@@ -15,7 +15,7 @@ public class CardStackViewer : MonoBehaviour {
     private int lastCount;
     private Vector3 start;
  
-    void Awake() {
+    private void Awake() {
         start  = gameObject.transform.position;
         fetchedCards = new Dictionary<int, CardStatus>();
         cardStack = GetComponent<CardStackController>();
@@ -25,29 +25,30 @@ public class CardStackViewer : MonoBehaviour {
         cardStack.CardAdded += cardStackCardAdded;
     }
 
-    void Update() {
-		//Update cards display if the size of the card stack has changed.
+    private void Update() {
+		// Update cards display if the size of the card stack has changed.
         if (lastCount != cardStack.CardCount) {
             lastCount = cardStack.CardCount;
             UpdateCardStackView();
         }
     }
 
-    //When called, removes cards from a card stack dictionary and destoys the associated card gameobject.
-    void cardStackCardRemoved (object source, CardEventArgs e) {
+    // When called, removes cards from a card stack dictionary and destoys the associated card gameobject.
+    private void cardStackCardRemoved (object source, CardEventArgs e) {
         if (fetchedCards.ContainsKey(e.CardIndex)) {
             Destroy(fetchedCards[e.CardIndex].Card);
             fetchedCards.Remove(e.CardIndex);
         }
     }
 
-    //When called, determines the position and intantiates a card. It then adds that card to the cardStack. 
-    void cardStackCardAdded(object source, CardEventArgs e) {
+    // When called, determines the position and intantiates a card. It then adds that card to the cardStack. 
+    private void cardStackCardAdded(object source, CardEventArgs e) {
         float currentOffset = posOffset * cardStack.CardCount;
         Vector3 tempPos = start + new Vector3(currentOffset, 0f);
         AddCard(tempPos, e.CardIndex, cardStack.CardCount);
     }
 
+    // Controls the positions of the card objects in the associated cardStack.
     private void UpdateCardStackView() {
 		start  = gameObject.transform.position;
         int cardCount = 0;
@@ -82,7 +83,7 @@ public class CardStackViewer : MonoBehaviour {
        
         cardController.ToggleFace(isFaceUp);
 
-        //Set the spriteRenderer sorting order to be reversed if the cardStack is the dealers cardStack.
+        // Set the spriteRenderer sorting order to be reversed if the cardStack is the dealers cardStack.
         SpriteRenderer spriteRenderer = cardCopy.GetComponent<SpriteRenderer>();
         if (cardStack.isDealerDeck) {
             spriteRenderer.sortingOrder = cardStack.CardCount - positionalIndex;
@@ -94,6 +95,7 @@ public class CardStackViewer : MonoBehaviour {
         fetchedCards.Add(cardIndex, new CardStatus(cardCopy));
     }
 
+    // Using the card objects cardStatus to set the visual state of a given card in a cardStack.
     public void Toggle(int card, bool isFaceUp)
     {
         fetchedCards[card].IsFaceUp = isFaceUp;

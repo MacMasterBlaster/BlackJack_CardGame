@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CardStackController : MonoBehaviour
 {
+    // The CardStackController class is used to control the deck and both the player and dealers hands.
+
     public event CardEventHandler CardRemoved;
     public event CardEventHandler CardAdded;
 
@@ -44,10 +46,10 @@ public class CardStackController : MonoBehaviour
                 Debug.Log(gameObject.name +": cardIndex " + cardIndex + " = " + rank);
             }
             else {
-                numAces++; //Otherwise its an ace.
+                numAces++; // Otherwise its an ace.
             }
         }
-        // Aces can be either 1 or 11. The ace's value will be based on which value keeps them under 21.
+        // Aces can be either 1 or 11. The ace's value will be based on which value keeps the handValue under or at 21.
         // This process is repeated with each ace in the card stack.
         for (int i = 0; i < numAces; i++) {
             if (totalValue + 11 <= 21) {
@@ -57,7 +59,6 @@ public class CardStackController : MonoBehaviour
                 totalValue += 1;
             }
         }
-        Debug.Log(gameObject.name +": Hand Total Value: " + totalValue);
         return totalValue;
     }
     
@@ -68,17 +69,17 @@ public class CardStackController : MonoBehaviour
         }
     }
 
-    //The base list for the deck of cards
+    // The base list for the deck of cards
     private List<int> cardStack;
 
-    void Awake () {
+    private void Awake () {
         cardStack = new List<int>();
         if (isDealerDeck) {
             CreateDeck();
         }
 	}
 
-    //Remove a card form the cardStack list
+    // Remove a card form the cardStack list
     public int RemoveCard() {
         int temp = cardStack[0];
         cardStack.RemoveAt(0);
@@ -88,7 +89,7 @@ public class CardStackController : MonoBehaviour
         return temp;
     }
 
-    //Add a card to the end of the card stack list.
+    // Add a card to the end of the card stack list.
     public void AddCard(int card) {
         cardStack.Add(card);
         if (CardAdded != null) {
@@ -97,21 +98,21 @@ public class CardStackController : MonoBehaviour
     }
    
     public void CreateDeck() {
-		//Check if a deck does not exists create one.
+		// Check if a deck does not exists create one.
         if (cardStack == null) {
             cardStack = new List<int>();
         }
-		//If the it does exist empty it.
+		// If the it does exist empty it.
         else {
             cardStack.Clear();
         }
-		//Add all the values to the list.
+		// Add all the values to the list.
         for (int i = 0; i < 52; i++) {
             cardStack.Add(i);
         }
 
-		//Shuffle card int values using Fisher Yates shuffle algorithim. 
-        //Then assign the new value to the cards list.
+		// Shuffle card int values using Fisher Yates shuffle algorithim. 
+        // Then assign the new value to the cards list.
 		int n = cardStack.Count;
 		while (n > 1) {
 			n--;
@@ -120,9 +121,5 @@ public class CardStackController : MonoBehaviour
 			cardStack[k] = cardStack[n];
 			cardStack[n] = temp;
 		}
-    }
-
-    public void DeleteInstance(){
-        Destroy(gameObject);
     }
 }
