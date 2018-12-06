@@ -46,6 +46,11 @@ public class Game_Manager : MonoBehaviour {
     private int playerWins;
     private int houseWins;
 
+    private void Start() {
+        // Pulls stores stats and stores values locally.
+        PullStats();
+    }
+
 #region ButtonFunctions
 	// Deals the initial hands of cards to the dealer and the player and creates the deck.
 	public void StartNewGame() {
@@ -104,6 +109,7 @@ public class Game_Manager : MonoBehaviour {
     // Method called by the stats button to display the game stats.
     public void ViewStats() {
         PullStats();
+        statsPanel.SetActive(true);
         gameOverText.text = string.Format("House Wins:{0}\nDealer Wins:{1}  Player Wins:{2}", houseWins, dealerWins, playerWins);
     }
 
