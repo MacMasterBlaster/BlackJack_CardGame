@@ -2,7 +2,6 @@
 Output-Build.txt
 obj/*
 .vs/*
-build/*
 builds/*
 capture/*
 Assembly-*
